@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": "hosting",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/api/**", "function": "api" },
+      { "source": "/g/**", "destination": "/index.html" },
+      { "source": "/contact", "destination": "/index.html" },
+      { "source": "/privacy", "destination": "/index.html" },
+      { "source": "/404", "destination": "/index.html" },
+      { "source": "/**", "function": "imageHandler" }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

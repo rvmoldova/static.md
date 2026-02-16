@@ -1,0 +1,52 @@
+.progress {
+  $diameter: 100px;
+  $stroke: 7px;
+  $rotationSteps: 100;
+  $rotationIncrement: (360 / $rotationSteps) / 2;
+  background: #ccc;
+  border-radius: 50%;
+  height: $diameter;
+  width: $diameter;
+  margin: 0 auto;
+  display: none;
+  &_mask,
+  &_fill {
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 50%;
+    clip: rect(0, $diameter, $diameter, $diameter / 2);
+    height: $diameter;
+    overflow: hidden;
+    position: absolute;
+    width: $diameter;
+  }
+  &_fill {
+    background: $primary-color;
+    clip: rect(0, $diameter / 2, $diameter, 0);
+  }
+  &:after {
+    content: attr(data-progress)'%';
+    $diameter: $diameter - $stroke * 2;
+    background: #fff;
+    border-radius: 50%;
+    height: $diameter;
+    line-height: $diameter;
+    margin: $stroke;
+    position: absolute;
+    text-align: center;
+    width: $diameter;
+  }
+  @for $step from 1 through $rotationSteps {
+    &[data-progress="#{$step}"] {
+      .progress_mask.isFull,
+      .progress_fill {
+        -webkit-transform: rotate($step * $rotationIncrement#{deg});
+        -moz-transform: rotate($step * $rotationIncrement#{deg});
+        -ms-transform: rotate($step * $rotationIncrement#{deg});
+        -o-transform: rotate($step * $rotationIncrement#{deg});
+        transform: rotate($step * $rotationIncrement#{deg});
+      }
+    }
+  }
+}

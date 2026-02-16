@@ -1,0 +1,25 @@
+@mixin transition {
+	transition: all .2s ease-in-out;
+}
+
+@mixin font-face($font-family, $font-weight, $file-path) {
+	@font-face {
+		font-weight: $font-weight;
+		font-style: normal;
+		font-family: $font-family;
+		src: url('#{$fonts-folder + $file-path}.eot');
+		src: local(#{$font-family}),
+		url('#{$fonts-folder + $file-path}.eot?#iefix') format('embedded-opentype'),
+		url('#{$fonts-folder + $file-path}.woff2') format('woff2'),
+		url('#{$fonts-folder + $file-path}.woff') format('woff'),
+		url('#{$fonts-folder + $file-path}.ttf') format('truetype'),
+		url('#{$fonts-folder + $file-path}.svg##{$font-family}') format('svg');
+	}
+}
+
+@function fluid-text($font-min,
+$font-max,
+$screen-min: 20,
+$screen-max: 80) {
+	@return calc(#{$font-min * 1em} + #{$font-max - $font-min} * (100vw - #{$screen-min * 1em}) / #{$screen-max - $screen-min});
+}

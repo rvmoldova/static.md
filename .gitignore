@@ -1,0 +1,9 @@
+node_modules/
+functions/node_modules/
+functions/dist/
+migration/node_modules/
+hosting/
+.omc/
+.firebase/
+*.log
+service-key.json

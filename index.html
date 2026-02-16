@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Free image hosting ;)">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static MD</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#267cdb">
+  <meta name="theme-color" content="#267cdb">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <noscript>
+    <link rel="stylesheet" href="/styles/noscript.css">
+  </noscript>
+</head>
+<body>
+  <div id="uploadApp">
+    <uploadmodal v-if="showModal" @close="showModal = false"></uploadmodal>
+  </div>
+  <header class="header">
+    <a class="header__logo" href="/" data-navigo="">
+      <div class="header__photo"></div>
+      <h1 class="header__name">static.md</h1>
+    </a>
+    <ul class="header__nav">
+      <li class="header__nav__item"><a class="header__nav__link link" id="nav_home" href="/" data-navigo="" data-i18n="nav.home">Home</a></li>
+      <li class="header__nav__item"><a class="header__nav__link link" id="nav_contact" href="/contact" data-navigo="" data-i18n="nav.contact">Contact</a></li>
+      <li class="header__nav__item" id="headerApp"><a class="header__nav__link link" id="nav_upload" href="#" data-i18n="nav.upload" @click="toggleModal($event)">Upload</a></li>
+    </ul>
+  </header>
+  <div id="app">
+    <noscript>
+      <section class="headline">
+        <p class="headline__text">Please enable JavaScript</p>
+        <p class="headline__paragraph">
+          This website depends heavily on JavaScript, please be so kind and turn it on. After you do so, you can
+          or just refresh the page. Thank you :)
+        </p>
+      </section>
+    </noscript>
+  </div>
+  <footer class="footer">
+    <p class="footer__copy"><a class="link" href="https://www.linkedin.com/in/rvmdl/" target="_blank" rel="noopener">&copy; <span id="year"></span></a></p>
+    <ul class="footer__nav">
+      <li class="footer__link"><a class="link" href="/" data-navigo="" data-i18n="nav.home">Home</a></li>
+      <li class="footer__link"><a class="link" href="/privacy" data-navigo="" data-i18n="nav.privacypolicy">Terms &amp; Privacy Policy</a></li>
+      <li class="footer__link"><a class="link" href="/contact" data-navigo="" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <script>
+    if (navigator.userAgent.indexOf('Speed Insights') == -1) {
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
+      ga('create', 'UA-86900756-6', 'auto');
+    }
+  </script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

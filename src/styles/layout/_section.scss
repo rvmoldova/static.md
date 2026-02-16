@@ -1,0 +1,89 @@
+.section {
+    display: flex;
+    max-width: $container-width;
+    margin: 0 auto 4rem;
+    flex-flow: row wrap;
+    @include ipad-port {
+        margin-bottom: 6vmax;
+    }
+    @include mob-big {
+        &:last-of-type {
+            margin-bottom: 2vmax;
+        }
+    }
+}
+
+.section__name {
+    display: inline-block;
+    padding: 0 2rem 1rem 0;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    opacity: 0;
+    font-size: $text-big;
+    font-weight: $font-bold;
+    flex-basis: 22%;
+    word-wrap: break-word;
+    will-change: opacity, transform;
+    transform: translateZ(0);
+    @include ipad-land {
+        flex-basis: 30%;
+    }
+    @include ipad-port {
+        flex-basis: 35%;
+    }
+    @include mob-big {
+        padding: 0 0 2vmax 0;
+        font-size: 5vmax;
+        flex-basis: 100%;
+    }
+}
+
+.section__list {
+    opacity: 0;
+    flex-basis: 78%;
+    will-change: opacity, transform;
+    transform: translateZ(0);
+    line-height: $line-height-big;
+    @include ipad-land {
+        flex-basis: 70%;
+    }
+    @include ipad-port {
+        flex-basis: 65%;
+    }
+    @include mob-big {
+        flex-basis: 100%;
+    }
+}
+
+.section__item {
+    margin-bottom: 2rem;
+    text-align: justify;
+    letter-spacing: .25px;
+    @include ipad-port {
+        margin-bottom: 4vmax;
+    }
+    @include mob-big {
+        margin-bottom: 6vmax;
+        &:not(&.section__item--longtext) {
+            text-align: left;
+        }
+    }
+}
+
+.section__item__l1 {
+    margin-bottom: .3em;
+    word-wrap: break-word;
+    color: $grey-dark;
+    font-size: $text-normal;
+}
+
+.section__item__l2 {
+    margin-bottom: .33em;
+    color: $grey-medium;
+    font-size: $text-small;
+}
+
+.section__item__l3 {
+    color: $grey-light;
+    font-size: $text-smallest;
+}

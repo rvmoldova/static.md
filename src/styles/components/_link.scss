@@ -1,0 +1,35 @@
+.link {
+   position: relative;
+   display: inline-block;
+   transition: color .2s ease-in-out;
+
+   &::after {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      content: '';
+      opacity: .25;
+      border: none;
+      border-bottom: 1px dashed currentColor;
+      transition-property: transform, opacity, border-bottom;
+      transition-duration: .2s;
+      transition-timing-function: ease-in-out;
+   }
+
+   &:hover {
+      color: $active;
+
+      &::after {
+         transform: translateY(-1em * $line-height) scaleY(2);
+         opacity: 1;
+         border-bottom: 1px solid $active;
+
+         .headline__paragraph & {
+            transform: translateY(-1.1em) scaleY(2);
+         }
+      }
+   }
+}

@@ -1,0 +1,166 @@
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-container {
+    width: 300px;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+    @media (min-width: 425px) {
+        width: 400px;
+    }
+    @media (min-width: 768px) {
+        width: 600px;
+    }
+}
+
+.modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+}
+
+.modal-body {
+    margin: 20px 0;
+}
+
+.modal-default-button {
+    float: right;
+    border: none;
+    background-color: #fff;
+    color: $grey-dark;
+}
+
+.modal-footer {
+    height: 21px;
+}
+
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+    opacity: 0;
+}
+
+.modal-leave-active {
+    opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.modal-header.modal-title {
+    padding: 0 50px 20px 0;
+    border-bottom: 1px solid $active;
+    color: $active;
+    font-size: $text-big;
+    line-height: $line-height-big;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.modal-body .fileContainer {
+    border-radius: 4px;
+    display: inline-block;
+    padding: 50px 0;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    transition: .2s;
+    border: 2px dashed $primary-color;
+    color: $active;
+}
+
+.modal-body .fileContainer:hover {
+    background-color: #f2f2f2;
+    transition: .2s;
+}
+
+.modal-body .files-not-selected {
+    text-align: center;
+    font-weight: $font-bold;
+    padding: 20px 0;
+}
+
+.upload-fancy {
+    margin: 0 !important;
+    height: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    -webkit-transform: scale(3);
+    transform: scale(3);
+    -moz-transition: all 1s;
+    -webkit-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+    z-index: 99999;
+}
+
+.upload-overlay {
+    // display: none;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    animation-name: nav_upload_animation;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    padding: 50px;
+    transform: translate(100%, -100%);
+    opacity: 0;
+    border-radius: 50%;
+    transition: all ease-in 0.15s;
+    .upload-overlay-zone {
+        position: relative;
+        border: 2px dashed #ffffff;
+        height: 100%;
+        h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+        }
+    }
+    &.show {
+        border-radius: 0%;
+        transform: translate(0, 0);
+        opacity: 1; // display: block;
+    }
+}

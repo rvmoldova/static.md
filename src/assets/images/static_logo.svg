@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+    <circle cx="50" cy="50" r="40" fill="transparent" transform="rotate(-135 50 50)" stroke-width="10" stroke="#0C89C8" stroke-dasharray="251.3,4000"
+        stroke-dashoffset="125.65" />
+    <circle cx="50" cy="50" r="40" fill="transparent" transform="rotate(45 50 50)" stroke-width="10" stroke="#1A7D59" stroke-dasharray="251.3,4000"
+        stroke-dashoffset="188.475" />
+    <circle cx="50" cy="50" r="40" fill="transparent" transform="rotate(135 50 50)" stroke-width="10" stroke="#E76D65" stroke-dasharray="251.3,4000"
+        stroke-dashoffset="188.475" />
+</svg>

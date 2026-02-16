@@ -1,0 +1,134 @@
+.header {
+    display: flex;
+    width: 100%;
+    letter-spacing: .5px;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: row wrap;
+    opacity: 0;
+    will-change: opacity, transform;
+    transform: translateZ(0);
+}
+
+@keyframes nav_upload_animation {
+    0% {
+        background-color: #1a7d59;
+    }
+    33% {
+        background-color: #e76d65;
+    }
+    66% {
+        background-color: #0c89c8;
+    }
+    100% {
+        background-color: #1a7d59;
+    }
+}
+
+#nav_upload {
+    background-color: #1a7d59;
+    border-radius: 7px;
+    margin: -3px;
+    padding: 3px;
+    color: white;
+    animation-name: nav_upload_animation;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.header__logo {
+    display: flex;
+    margin-right: 1.5em;
+    margin-bottom: 1.5em;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.header__photo {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+    border-radius: 100%;
+    background-image: url('../assets/images/static_logo.svg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease-in-out;
+    @include mob-big {
+        width: 33vw;
+        height: 33vw;
+        margin-right: 5vw;
+    }
+    &:hover {
+        transform: scale(1.25); // @supports (mix-blend-mode: multiply) {
+        //     background-color: magenta;
+        //     background-blend-mode: screen;
+        //     &::before,   
+        //     &::after {
+        //         display: block;
+        //         content: '';
+        //         position: absolute;
+        //         top: 0;
+        //         left: 0;
+        //         right: 0;
+        //         bottom: 0;
+        //         background: inherit;
+        //         mix-blend-mode: multiply;
+        //         background-blend-mode: screen;
+        //         transform: scale(1.06);
+        //     }
+        //     &::before {
+        //         background-color: yellow;
+        //         transform-origin: top left;
+        //     }
+        //     &::after {
+        //         background-color: cyan;
+        //         transform-origin: bottom right;
+        //     }
+        // }
+    }
+}
+
+.header__name {
+    display: inline-block;
+    font-size: $text-normal;
+    @include mob-big {
+        font-size: 8vw;
+    }
+}
+
+.header__nav {
+    display: flex;
+    margin-bottom: 1.5em;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.header__nav__item {
+    display: inline-block;
+    @include mob-big {
+        margin-bottom: 1em;
+        font-size: 5vw;
+        flex-basis: calc(50% - 2em);
+        &:last-of-type {
+            flex-basis: 50%;
+        }
+    }
+    &:not(:last-of-type) {
+        margin-right: 2em;
+    }
+}
+
+.header__nav__link {
+    display: inline-block;
+    color: $grey-dark;
+    font-size: $text-normal;
+    &--active {
+        color: $active;
+        font-weight: $font-bold;
+    }
+    &::after {
+        display: none;
+    }
+}

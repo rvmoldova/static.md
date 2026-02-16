@@ -1,0 +1,13 @@
+@import 'abstracts/variables';
+
+html {
+   font-family: $fonts-primary, $fonts-fallback;
+}
+
+.header,
+.footer,
+.headline,
+.section__name,
+.section__list {
+   opacity: 1;
+}

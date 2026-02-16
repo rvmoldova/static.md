@@ -1,0 +1,15 @@
+{
+  "name": "static-md-migration",
+  "private": true,
+  "scripts": {
+    "migrate": "npx ts-node migrateData.ts"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0",
+    "mongodb": "^4.17.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.0"
+  }
+}

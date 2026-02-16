@@ -1,0 +1,35 @@
+$grey-dark: rgba(#000, .8);
+$grey-medium: rgba(#000, .54);
+$grey-light: rgba(#000, .38);
+$active: #267CDB;
+
+$primary-color: #0c89c8;
+$primary-color-trans: rgba(66, 134, 244, 0.5);
+$secondary-color: #1a7d59;
+$ternary-color: #e76d65;
+
+$text-normal: 1.3em;
+$text-tiny: .6 * $text-normal;
+$text-small: .8 * $text-normal;
+$text-smallest: .8 * $text-small;
+$text-big: 1.2 * $text-normal;
+$text-biggest: 1.6 * $text-normal;
+
+$line-height: 1.35;
+$line-height-small: 1.2;
+$line-height-big: 1.47;
+
+$font-light: 300;
+$font-regular: 400;
+$font-bold: 600;
+
+$fonts-fallback: Arial, sans-serif;
+$fonts-primary: 'Titillium Web';
+$fonts-folder: '../fonts/';
+
+$body-width: 1280px;
+$container-width: 1024px;
+
+// The padding between grid items
+$grid-item-spacing: 5px;
+
