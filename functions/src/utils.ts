@@ -49,6 +49,10 @@ export async function getUnique(
  * Extract the real client IP from request headers.
  */
 export function extractIP(req: Request): string {
+  const cfIP = req.headers['cf-connecting-ip'];
+  if (typeof cfIP === 'string') {
+    return cfIP.trim();
+  }
   const forwarded = req.headers['x-forwarded-for'];
   if (typeof forwarded === 'string') {
     return forwarded.split(',')[0].trim();
