@@ -26,14 +26,19 @@ app.get('/api/health', (_req, res) => {
 
 // ── Cloud Function exports ─────────────────────────────────────
 
+const region = 'europe-west1';
+
 /** API function — handles all /api/** routes */
 export const api = onRequest(
-  { memory: '256MiB', timeoutSeconds: 60, concurrency: 80, secrets: [uploadToken] },
+  { region, memory: '256MiB', timeoutSeconds: 60, concurrency: 80, secrets: [uploadToken] },
   app
 );
 
+/** Async image analysis — triggers after upload to Cloud Storage */
+export { analyzeImage } from './analyzeImage';
+
 /** Image handler — catch-all for /{hash} image URLs */
 export const imageHandler = onRequest(
-  { memory: '256MiB', timeoutSeconds: 30, concurrency: 80 },
+  { region, memory: '256MiB', timeoutSeconds: 30, concurrency: 80 },
   handleImageRequest as any
 );
