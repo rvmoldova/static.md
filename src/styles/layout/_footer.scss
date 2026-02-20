@@ -34,7 +34,7 @@
         margin-left: 2em;
     }
     @include mob-small {
-        flex-basis: 50%;
+        flex-basis: auto;
         &:not(:first-of-type) {
             margin-left: 0;
         }

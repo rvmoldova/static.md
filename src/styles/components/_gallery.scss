@@ -1,5 +1,6 @@
 .grid-sizer,
 .grid-item {
+    width: 100%;
     @media(min-width: 500px) {
         width: 50%;
     }
@@ -97,17 +98,18 @@ figure.grid-item {
         margin: 0 auto;
         padding: 20px 30px;
         border: 1px solid #888;
-        width: 300px;
+        width: calc(100vw - 2rem);
+        max-width: 300px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         -webkit-animation-name: animateTop;
         -webkit-animation-duration: 0.4s;
         animation-name: animateTop;
         animation-duration: 0.4s;
         @media (min-width: 425px) {
-            width: 400px;
+            max-width: 400px;
         }
         @media (min-width: 768px) {
-            width: 600px;
+            max-width: 600px;
         }
     }
     /* The Close Button */
@@ -181,9 +183,8 @@ figure.grid-item {
     }
     .copy-trigger {
         position: absolute;
-        right: 0;
-        margin-right: 10px;
-        margin-top: 110px;
+        right: 1rem;
+        bottom: 1rem;
         color: $primary-color;
         &:hover {
             cursor: pointer;
@@ -341,7 +342,7 @@ section.headline {
 #toast {
     visibility: hidden;
     min-width: 250px;
-    margin-left: -125px;
+    max-width: calc(100vw - 2rem);
     background-color: $secondary-color;
     color: #fff;
     text-align: center;
@@ -352,6 +353,7 @@ section.headline {
     left: 50%;
     bottom: 30px;
     font-size: 17px;
+    transform: translateX(-50%);
     &.show {
         visibility: visible;
         -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;

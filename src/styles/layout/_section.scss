@@ -33,7 +33,7 @@
     }
     @include mob-big {
         padding: 0 0 2vmax 0;
-        font-size: 5vmax;
+        font-size: clamp(1.2em, 5vw, 1.8em);
         flex-basis: 100%;
     }
 }

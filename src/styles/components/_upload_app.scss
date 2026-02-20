@@ -16,7 +16,8 @@
 }
 
 .modal-container {
-    width: 300px;
+    width: calc(100vw - 2rem);
+    max-width: 300px;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
@@ -25,10 +26,10 @@
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
     @media (min-width: 425px) {
-        width: 400px;
+        max-width: 400px;
     }
     @media (min-width: 768px) {
-        width: 600px;
+        max-width: 600px;
     }
 }
 
@@ -77,11 +78,14 @@
 }
 
 .modal-header.modal-title {
-    padding: 0 50px 20px 0;
+    padding: 0 20px 20px 0;
     border-bottom: 1px solid $active;
     color: $active;
     font-size: $text-big;
     line-height: $line-height-big;
+    @media (min-width: 425px) {
+        padding: 0 50px 20px 0;
+    }
 }
 
 input[type="file"] {
