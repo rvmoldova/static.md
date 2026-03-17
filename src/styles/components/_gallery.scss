@@ -28,7 +28,8 @@ figure.grid-item {
     opacity: 0.9;
     float: left;
     a {
-        display: block;
+        display: flex;
+        justify-content: center;
         line-height: 0;
     }
     &:hover {
