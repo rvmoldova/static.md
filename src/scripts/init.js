@@ -12,6 +12,9 @@ $(document).ready(() => {
 	if (!window.Promise)
 		window.Promise = Promise;
 
+	// Warm up the upload Cloud Function so it's ready when the user uploads
+	fetch('/api/v4/upload?ping=true').catch(() => {});
+
 	let galleryIdGl;
 
 	i18next.init({
