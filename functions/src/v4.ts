@@ -9,6 +9,19 @@ export function createV4Router(): Router {
   const db = admin.firestore();
 
   /**
+   * GET /api/v4/upload?ping=true
+   * Warm-up endpoint — returns 200 OK so the Cloud Function instance is ready
+   * when a real upload arrives.
+   */
+  router.get('/upload', (req: Request, res: Response) => {
+    if (req.query.ping === 'true') {
+      res.status(200).json({ status: 'ok' });
+      return;
+    }
+    res.status(405).json({ error: 'Method not allowed' });
+  });
+
+  /**
    * POST /api/v4/upload
    * Accepts token=carocetoken + files. Uploads photos and creates a gallery.
    */
