@@ -39,4 +39,16 @@
             margin-left: 0;
         }
     }
+
+    &:last-child .link {
+        display: inline-flex;
+        align-items: center;
+        gap: .35em;
+    }
+
+    .chrome-icon {
+        flex-shrink: 0;
+        width: 1em;
+        height: 1em;
+    }
 }
