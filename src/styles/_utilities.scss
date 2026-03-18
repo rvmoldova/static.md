@@ -1,0 +1,175 @@
+// Utility Classes
+// Composable, single-purpose helpers. Keep specificity low.
+
+// ── Accessibility ─────────────────────────────────────────────────────────────
+
+// Visually hidden but available to screen readers and keyboard focus
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Reveal when focused (skip-to-main-content links, etc.)
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: var(--space-2) var(--space-4);
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding-inline: var(--content-padding);
+}
+
+// Full-bleed: escape the container (pair with a .container parent)
+.bleed {
+  margin-inline: calc(var(--content-padding) * -1);
+}
+
+// ── Flex ──────────────────────────────────────────────────────────────────────
+.flex          { display: flex; }
+.flex-col      { flex-direction: column; }
+.flex-wrap     { flex-wrap: wrap; }
+.items-start   { align-items: flex-start; }
+.items-center  { align-items: center; }
+.items-end     { align-items: flex-end; }
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.flex-1        { flex: 1 1 0%; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+// ── Gap ───────────────────────────────────────────────────────────────────────
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
+.grid { display: grid; }
+
+// Auto-fill column grid — useful for gallery thumbnails
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+  gap: var(--space-4);
+}
+
+// ── Spacing ───────────────────────────────────────────────────────────────────
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+
+// ── Display ───────────────────────────────────────────────────────────────────
+.hidden   { display: none; }
+.block    { display: block; }
+.inline   { display: inline; }
+.inline-block { display: inline-block; }
+
+// ── Overflow ──────────────────────────────────────────────────────────────────
+.overflow-hidden { overflow: hidden; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Cursor ────────────────────────────────────────────────────────────────────
+.cursor-pointer  { cursor: pointer; }
+.cursor-default  { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+// ── Opacity ───────────────────────────────────────────────────────────────────
+.opacity-0    { opacity: 0; }
+.opacity-50   { opacity: 0.5; }
+.opacity-75   { opacity: 0.75; }
+.opacity-100  { opacity: 1; }
+
+// ── Pointer events ────────────────────────────────────────────────────────────
+.pointer-events-none { pointer-events: none; }
+.pointer-events-auto { pointer-events: auto; }
+
+// ── Position ─────────────────────────────────────────────────────────────────
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; }
+.inset-0  { inset: 0; }
+
+// ── Width / height ────────────────────────────────────────────────────────────
+.w-full   { width: 100%; }
+.h-full   { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+// ── Border ────────────────────────────────────────────────────────────────────
+.border {
+  border: 1px solid var(--color-border);
+}
+
+.border-strong {
+  border: 1px solid var(--color-border-strong);
+}
+
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+// ── Background ────────────────────────────────────────────────────────────────
+.bg-surface        { background-color: var(--color-surface); }
+.bg-surface-raised { background-color: var(--color-surface-raised); }
+.bg-surface-sunken { background-color: var(--color-surface-sunken); }
+
+// ── Shadows ───────────────────────────────────────────────────────────────────
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+// ── Transitions ───────────────────────────────────────────────────────────────
+.transition-colors {
+  transition:
+    color var(--duration-fast) var(--ease-out-quart),
+    background-color var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+}
+
+.transition-transform {
+  transition: transform var(--duration-fast) var(--ease-out-quart);
+}
+
+.transition-opacity {
+  transition: opacity var(--duration-fast) var(--ease-out-quart);
+}
+
+// ── Interaction state ─────────────────────────────────────────────────────────
+// Hover lift — subtle 3D feel for interactive cards / thumbnails
+.hover-lift {
+  transition: transform var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

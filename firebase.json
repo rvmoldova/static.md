@@ -8,6 +8,7 @@
       { "source": "/contact", "destination": "/index.html" },
       { "source": "/privacy", "destination": "/index.html" },
       { "source": "/404", "destination": "/index.html" },
+      { "source": "/developer", "destination": "/index.html" },
       { "source": "/**", "function": "imageHandler" }
     ]
   },

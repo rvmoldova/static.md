@@ -1,0 +1,108 @@
+// Animation System
+// Keyframes + utility classes + Vue transition hooks.
+// Only animates transform and opacity — GPU composited, no layout thrashing.
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+// Signature feature: drag-to-upload overlay cycles through brand hues
+@keyframes upload-cycle {
+  0%   { background-color: var(--upload-color-1); }
+  33%  { background-color: var(--upload-color-2); }
+  66%  { background-color: var(--upload-color-3); }
+  100% { background-color: var(--upload-color-1); }
+}
+
+// Indeterminate loading bar — slides across its container
+@keyframes loading-bar {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+// Subtle pulse for skeleton / placeholder states
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+// Spinner — used by upload progress indicator
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Animation utility classes ─────────────────────────────────────────────────
+
+.animate-fade-in {
+  animation: fade-in var(--duration-entrance) var(--ease-out-quart) both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up var(--duration-entrance) var(--ease-out-quart) both;
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down var(--duration-entrance) var(--ease-out-quart) both;
+}
+
+.animate-fade-in-left {
+  animation: fade-in-left var(--duration-entrance) var(--ease-out-quart) both;
+}
+
+.animate-fade-in-right {
+  animation: fade-in-right var(--duration-entrance) var(--ease-out-quart) both;
+}
+
+.animate-pulse {
+  animation: pulse 2s var(--ease-out-quart) infinite;
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+// ── Stagger support ───────────────────────────────────────────────────────────
+// Set --stagger-index CSS var on each child element; combine with an animate-* class.
+// Example: <li class="animate-fade-in-up stagger" style="--stagger-index: 2">
+.stagger {
+  animation-delay: calc(var(--stagger-index, 0) * 80ms);
+}
+
+// ── Reduced motion ────────────────────────────────────────────────────────────
+// Override all animation and transition durations to near-zero.
+// Visibility changes (opacity) are preserved at minimum duration for correctness.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
