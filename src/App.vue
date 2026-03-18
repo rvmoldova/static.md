@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide } from 'vue'
+import { provide, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
@@ -15,6 +15,14 @@ const toast = useToast()
 
 provide('upload', upload)
 provide('toast', toast)
+
+// Auto-upload when files arrive via drag-drop or paste
+watch(upload.pendingFiles, (files) => {
+  if (files.length > 0) {
+    onUploadFiles(files)
+    upload.pendingFiles.value = []
+  }
+})
 
 async function onUploadFiles(files: File[]) {
   try {

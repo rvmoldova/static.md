@@ -8,6 +8,7 @@ export function useUpload() {
   const progress = ref(0);
   const error = ref<string | null>(null);
   const abortController = ref<AbortController | null>(null);
+  const pendingFiles = ref<File[]>([]);
 
   let dragCounter = 0;
 
@@ -58,8 +59,8 @@ export function useUpload() {
     }
 
     if (files.length > 0) {
+      pendingFiles.value = files;
       showModal.value = true;
-      upload(files);
     }
   }
 
@@ -76,8 +77,8 @@ export function useUpload() {
     }
 
     if (files.length > 0) {
+      pendingFiles.value = files;
       showModal.value = true;
-      upload(files);
     }
   }
 
@@ -118,6 +119,7 @@ export function useUpload() {
   function closeModal(): void {
     abort();
     showModal.value = false;
+    pendingFiles.value = [];
   }
 
   onMounted(() => {
@@ -142,6 +144,7 @@ export function useUpload() {
     isUploading,
     progress,
     error,
+    pendingFiles,
     upload,
     abort,
     openModal,
