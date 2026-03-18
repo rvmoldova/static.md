@@ -65,6 +65,7 @@ useReveal(pageRef, { selector: '.reveal', animationClass: 'animate-fade-in-up', 
   max-width: var(--content-width);
   margin-inline: auto;
   padding-inline: var(--content-padding);
+  padding-bottom: var(--space-24);
 }
 
 .hero {
