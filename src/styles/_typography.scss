@@ -1,0 +1,135 @@
+// Typography System
+// Utility classes and semantic type patterns.
+// All sizing references tokens from _tokens.scss.
+
+// ── Size utilities ────────────────────────────────────────────────────────────
+.text-xs   { font-size: var(--text-xs); }
+.text-sm   { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg   { font-size: var(--text-lg); }
+.text-xl   { font-size: var(--text-xl); }
+.text-2xl  { font-size: var(--text-2xl); }
+.text-3xl  { font-size: var(--text-3xl); }
+
+// ── Weight utilities ──────────────────────────────────────────────────────────
+.font-regular { font-weight: var(--weight-regular); }
+.font-bold    { font-weight: var(--weight-bold); }
+
+// ── Color utilities ───────────────────────────────────────────────────────────
+.text-primary   { color: var(--color-text); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary  { color: var(--color-text-tertiary); }
+.text-brand     { color: var(--color-primary); }
+.text-accent    { color: var(--color-accent); }
+
+// ── Headline ──────────────────────────────────────────────────────────────────
+// Large page-level title. Uppercase monospace — the "terminal elegance" anchor.
+.headline {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+// ── Subheadline ───────────────────────────────────────────────────────────────
+// Complementary line beneath a headline — lighter, secondary colour
+.subheadline {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-tight);
+  color: var(--color-text-secondary);
+}
+
+// ── Section title ─────────────────────────────────────────────────────────────
+// Small-caps-ish label above a content section
+.section-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-normal);
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+// ── Label ─────────────────────────────────────────────────────────────────────
+// Metadata, captions, tags — small + secondary
+.label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+// ── Prose ─────────────────────────────────────────────────────────────────────
+// Long-form reading (privacy, developer docs, contact). Constrained measure.
+.prose {
+  max-width: 65ch;
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+
+  p + p {
+    margin-top: var(--space-4);
+  }
+
+  h2, h3, h4 {
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  h2 { font-size: var(--text-xl); }
+  h3 { font-size: var(--text-lg); }
+  h4 { font-size: var(--text-base); }
+
+  strong {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  em {
+    font-style: normal; // Monospace italics are ugly — use colour instead
+    color: var(--color-accent);
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+
+    &:hover {
+      color: var(--color-primary-text);
+    }
+  }
+
+  ul, ol {
+    padding-left: var(--space-6);
+    margin-top: var(--space-4);
+
+    li + li {
+      margin-top: var(--space-2);
+    }
+  }
+
+  ul {
+    list-style-type: '— '; // Em-dash marker — matches the monospace aesthetic
+  }
+
+  blockquote {
+    border-left: 2px solid var(--color-primary);
+    padding-left: var(--space-4);
+    margin-left: 0;
+    color: var(--color-text-secondary);
+  }
+
+  hr {
+    margin-block: var(--space-8);
+  }
+}

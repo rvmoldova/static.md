@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 
 export default defineConfig({
   root: '.',
   publicDir: 'public',
+  plugins: [vue()],
   build: {
     outDir: 'hosting',
     emptyOutDir: true,
@@ -14,13 +16,11 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'legacy',
+        api: 'modern-compiler',
       },
     },
   },
   server: {
     port: 3000,
-    // SPA fallback for client-side routing
-    middlewareMode: false,
   },
 });

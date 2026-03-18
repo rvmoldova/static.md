@@ -1,0 +1,89 @@
+// Modern CSS Reset
+// Opinionated baseline that removes browser inconsistencies
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  // Prevent font size inflation on mobile
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  min-height: 100vh;
+}
+
+// Remove default list styles when a list has a role
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+// Set shorter line heights on headings and interactive elements
+h1, h2, h3, h4, button, input, label {
+  line-height: 1.1;
+}
+
+// Balance text wrapping on headings
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+// Remove default button styles
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+// Images and media are block-level, never exceed their container
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+// Inherit fonts for form controls
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// Avoid text overflows
+p,
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+// Remove default fieldset styles
+fieldset {
+  border: none;
+}
+
+// Remove default table spacing
+table {
+  border-collapse: collapse;
+}
+
+// Make SVG inherit currentColor
+svg {
+  fill: currentColor;
+}
