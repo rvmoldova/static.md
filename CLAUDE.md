@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Static.md is a free image hosting service, rewritten as a Vue 3 SPA + Firebase backend. This subdirectory (`static.md/`) replaces the old `static-back` (Express/MongoDB) and `static-land` (Pug/Gulp) projects with a unified Vite + Firebase Functions architecture.
+Static.md is a free, open-source image hosting service, rewritten as a Vue 3 SPA + Firebase backend. This subdirectory (`static.md/`) replaces the old `static-back` (Express/MongoDB) and `static-land` (Pug/Gulp) projects with a unified Vite + Firebase Functions architecture. There is no public API — the API is internal, used only by the frontend and Chrome extension.
 
 ## Build & Development Commands
 
@@ -49,7 +49,9 @@ Vue 3 SPA with Composition API (`<script setup lang="ts">`), vue-router 4, and S
 
 **SCSS:** Token-based design system in `src/styles/` — `_tokens.scss` defines CSS custom properties, `_themes.scss` handles light/dark mode.
 
-**Design principles:** See .impeccable.md for design principles and aesthetic direction.
+**Icons:** All icons use `lucide-vue-next`. No inline SVGs — import components from Lucide (e.g., `import { Copy, Check, X } from 'lucide-vue-next'`).
+
+**Design principles:** See `.impeccable.md` for design principles and aesthetic direction.
 
 ### Cloud Functions (`functions/src/`)
 
