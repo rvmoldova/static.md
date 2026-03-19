@@ -241,7 +241,8 @@ function openUpload() {
     font-size: var(--text-xs);
   }
 
-  // Hide extension link on mobile (Chrome-specific)
+  // Hide contact and extension links on mobile
+  .app-header__nav-link--contact,
   .app-header__nav-link--ext {
     display: none;
   }
