@@ -85,12 +85,12 @@ main {
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(12px) scale(0.99);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-8px) scale(0.99);
 }
 
 // Overlay transition

@@ -123,6 +123,7 @@ watch(() => props.images, () => {
       v-for="(image, index) in images"
       :key="image.url"
       class="grid-item"
+      :style="{ '--item-index': index }"
       itemprop="image"
       itemscope
       itemtype="http://schema.org/ImageObject"
@@ -173,6 +174,21 @@ watch(() => props.images, () => {
 // Gutter must match the JS GUTTER constant
 $gutter: 10px;
 
+// ── Keyframes ────────────────────────────────────────────────────────────────
+
+// Staggered image entrance
+@keyframes image-reveal {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+// Share button confirmed pulse
+@keyframes share-pulse {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(0) scale(1.15); }
+  100% { transform: translateY(0) scale(1); }
+}
+
 .grid-gallery {
   position: relative;
   margin: 0 auto;
@@ -210,6 +226,8 @@ $gutter: 10px;
   position: relative;
   overflow: hidden;
   line-height: 0; // Remove inline gap under image
+  // 3D depth context for hover effect
+  perspective: 800px;
 
   &:focus-visible {
     outline: 2px solid var(--color-primary);
@@ -223,10 +241,12 @@ $gutter: 10px;
   height: auto;
   opacity: 0;
   transition: transform var(--duration-normal) var(--ease-out-quart),
-              opacity var(--duration-normal) var(--ease-out-quart);
+              filter var(--duration-normal) var(--ease-out-quart);
 
+  // Staggered entrance: fade + scale up when image loads
   &.is-loaded {
-    opacity: 1;
+    --stagger: calc(var(--item-index, 0) * 60ms);
+    animation: image-reveal var(--duration-entrance) var(--ease-out-quart) var(--stagger) both;
   }
 }
 
@@ -246,10 +266,11 @@ $gutter: 10px;
   filter: drop-shadow(0 2px 4px oklch(from var(--color-shadow) l c h / 0.3));
 }
 
-// Hover interactions on the link
+// Hover interactions on the link — subtle 3D depth lift
 .grid-item__link:hover {
   .grid-item__img {
-    transform: scale(1.03);
+    transform: scale(1.02) translateZ(10px);
+    filter: brightness(1.02);
   }
 
   .grid-item__overlay {
@@ -293,11 +314,11 @@ $gutter: 10px;
   }
 }
 
-// Copied state
+// Copied state — accent color + satisfying scale pulse
 .grid-item__share.is-copied {
   color: var(--color-accent);
   opacity: 1;
-  transform: translateY(0);
+  animation: share-pulse 300ms var(--ease-out-quart);
 }
 
 // Show share button on figure hover
@@ -319,10 +340,16 @@ $gutter: 10px;
   .grid-item__overlay,
   .grid-item__share {
     transition: none;
+    animation: none;
   }
 
   .grid-item__img {
     opacity: 1;
+  }
+
+  .grid-item__share.is-copied {
+    animation: none;
+    transform: translateY(0);
   }
 }
 </style>

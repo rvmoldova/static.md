@@ -19,7 +19,7 @@ import { CloudUpload } from 'lucide-vue-next'
   pointer-events: none;
   animation: upload-cycle 3s ease-in-out infinite;
 
-  // Inset dashed border frame
+  // Inset dashed border frame — breathes gently
   &::before {
     content: '';
     position: absolute;
@@ -27,7 +27,18 @@ import { CloudUpload } from 'lucide-vue-next'
     border: 2px dashed oklch(from var(--color-on-primary) l c h / 0.6);
     border-radius: var(--radius-lg);
     pointer-events: none;
+    animation: border-breathe 2s ease-in-out infinite;
   }
+}
+
+@keyframes border-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(0.995); }
+}
+
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
 
 .upload-overlay__inner {
@@ -46,6 +57,7 @@ import { CloudUpload } from 'lucide-vue-next'
   height: 3.5rem;
   opacity: 0.85;
   filter: drop-shadow(0 2px 8px oklch(from var(--color-shadow) l c h / 0.3));
+  animation: icon-float 3s ease-in-out infinite;
 }
 
 .upload-overlay__label {
@@ -61,6 +73,15 @@ import { CloudUpload } from 'lucide-vue-next'
   .upload-overlay {
     animation: none;
     background-color: var(--upload-color-1);
+
+    &::before {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+
+  .upload-overlay__icon {
+    animation: none;
   }
 }
 </style>

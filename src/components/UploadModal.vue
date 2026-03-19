@@ -109,7 +109,7 @@ function handleKeydown(e: KeyboardEvent) {
             <span class="modal__progress-pct">{{ progress }}%</span>
           </div>
           <div class="modal__progress-track" role="progressbar" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-            <div class="modal__progress-fill" :style="{ width: progress + '%' }" />
+            <div class="modal__progress-fill" :class="{ 'modal__progress-fill--complete': progress >= 100 }" :style="{ width: progress + '%' }" />
           </div>
           <p class="modal__progress-hint">Please wait…</p>
         </div>
@@ -356,8 +356,39 @@ function handleKeydown(e: KeyboardEvent) {
   height: 100%;
   background-color: var(--color-primary);
   border-radius: var(--radius-full);
-  transition: width var(--duration-fast) var(--ease-out-quart);
+  transition: width var(--duration-fast) var(--ease-out-quart),
+              background-color var(--duration-normal) var(--ease-out-quart),
+              transform var(--duration-fast) var(--ease-out-quart);
   min-width: 2px;
+  position: relative;
+  overflow: hidden;
+
+  // Shimmer highlight sliding across the bar
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, oklch(100% 0 0 / 0.25), transparent);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+// Upload complete: flash accent color + slight scale
+.modal__progress-fill--complete {
+  background-color: var(--color-accent);
+  transform: scaleY(1.3);
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+              transform var(--duration-fast) var(--ease-out-quart);
+
+  &::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .modal__progress-hint {
@@ -491,6 +522,14 @@ function handleKeydown(e: KeyboardEvent) {
 
 @media (prefers-reduced-motion: reduce) {
   .modal__progress-fill {
+    transition: none;
+
+    &::after {
+      animation: none;
+    }
+  }
+
+  .modal__progress-fill--complete {
     transition: none;
   }
 }
