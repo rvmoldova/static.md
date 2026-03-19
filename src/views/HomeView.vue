@@ -20,9 +20,9 @@ const capabilities = [
 <template>
   <div ref="pageRef" class="home">
     <section class="hero" aria-label="Welcome">
-      <h1 class="reveal headline">Hello</h1>
-      <p class="reveal subheadline">Free image hosting</p>
-      <p class="reveal usage-hint" aria-label="Quick start instructions">
+      <h1 class="hero-reveal headline">Hello</h1>
+      <p class="hero-reveal subheadline" style="--hero-delay: 120ms">Free image hosting</p>
+      <p class="hero-reveal usage-hint" style="--hero-delay: 240ms" aria-label="Quick start instructions">
         Drop images anywhere&nbsp;&nbsp;·&nbsp;&nbsp;Paste from clipboard&nbsp;&nbsp;·&nbsp;&nbsp;Get a shareable link
       </p>
     </section>
@@ -48,6 +48,7 @@ const capabilities = [
             <a v-if="cap.href" class="terminal__desc terminal__desc--link" :href="cap.href" target="_blank" rel="noopener noreferrer">{{ cap.desc }}</a>
             <span v-else class="terminal__desc">{{ cap.desc }}</span>
           </div>
+          <p class="terminal__cursor" aria-hidden="true">_</p>
         </div>
       </div>
     </section>
@@ -67,10 +68,20 @@ const capabilities = [
   max-width: var(--content-width);
   margin-inline: auto;
   padding-inline: var(--content-padding);
-  padding-bottom: var(--space-16);
+  padding-bottom: var(--space-24);
 }
 
 // ── Hero ───────────────────────────────────────────────────────────────────
+
+@keyframes hero-reveal {
+  from { opacity: 0; transform: scale(1.04); filter: blur(4px); }
+  to   { opacity: 1; transform: scale(1);    filter: blur(0); }
+}
+
+.hero-reveal {
+  animation: hero-reveal var(--duration-entrance) var(--ease-out-quart) both;
+  animation-delay: var(--hero-delay, 0ms);
+}
 
 .hero {
   margin-top: var(--space-16);
@@ -156,7 +167,7 @@ const capabilities = [
   color: var(--color-primary);
   font-weight: var(--weight-bold);
   flex-shrink: 0;
-  min-width: 5ch;
+  white-space: nowrap;
 }
 
 .terminal__sep {
@@ -179,6 +190,19 @@ const capabilities = [
   }
 }
 
+
+.terminal__cursor {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  animation: blink 1.2s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 @media (max-width: 480px) {
   .hero {
     margin-top: var(--space-8);
@@ -186,7 +210,6 @@ const capabilities = [
   }
 
   .usage-hint {
-    // Stack hints vertically instead of inline with · separators
     display: none;
   }
 
@@ -212,7 +235,6 @@ const capabilities = [
   .terminal__cmd {
     grid-column: 2;
     grid-row: 1;
-    min-width: unset;
   }
 
   .terminal__sep {
@@ -222,10 +244,21 @@ const capabilities = [
   .terminal__desc {
     grid-column: 1 / -1;
     grid-row: 2;
-    padding-left: calc(1ch + var(--space-2)); // indent under $ prompt
+    padding-left: calc(1ch + var(--space-2));
     font-size: var(--text-xs);
     color: var(--color-text-tertiary);
     padding-bottom: var(--space-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal {
+    animation: none;
+    opacity: 1;
+  }
+
+  .terminal__cursor {
+    animation: none;
   }
 }
 

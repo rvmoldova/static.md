@@ -7,3 +7,4 @@ hosting/
 .firebase/
 *.log
 service-key.json
+*.tmp.md

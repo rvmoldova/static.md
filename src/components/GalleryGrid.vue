@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import Masonry from 'masonry-layout'
 import imagesLoaded from 'imagesloaded'
+import { Share2, Check, ZoomIn } from 'lucide-vue-next'
 import { useClipboard } from '../composables/useClipboard'
 import { useToast } from '../composables/useToast'
 import type { GalleryImage } from '../api'
@@ -16,37 +17,81 @@ const props = defineProps({
 const gridRef = ref(null)
 const { copy } = useClipboard()
 const toast = useToast()
+const copiedIndex = ref<number | null>(null)
+const loadedImages = ref<Set<number>>(new Set())
 
 let msnry: Masonry | null = null
+
+// Gutter size in pixels — single source of truth
+const GUTTER = 10
+
+function getColumnLayout(): 'single' | 'double' | 'triple' {
+  const w = window.innerWidth
+  if (w >= 1100) return 'triple'
+  if (w >= 500) return 'double'
+  return 'single'
+}
 
 function initMasonry() {
   if (!gridRef.value) return
 
-  msnry = new Masonry(gridRef.value, {
-    itemSelector: '.grid-item',
-    columnWidth: '.grid-sizer',
-    gutter: '.gutter-sizer',
-    percentPosition: true,
-    transitionDuration: '0.3s',
-  })
+  const layout = getColumnLayout()
+
+  if (layout === 'single') {
+    // Single column: no fitWidth, just full-width stacking
+    msnry = new Masonry(gridRef.value, {
+      itemSelector: '.grid-item',
+      columnWidth: '.grid-sizer',
+      gutter: GUTTER,
+      percentPosition: false,
+      transitionDuration: '0.3s',
+    })
+  } else {
+    // Multi-column: fitWidth for centering
+    msnry = new Masonry(gridRef.value, {
+      itemSelector: '.grid-item',
+      columnWidth: '.grid-sizer',
+      gutter: GUTTER,
+      fitWidth: true,
+      transitionDuration: '0.3s',
+    })
+  }
 
   imagesLoaded(gridRef.value, () => {
-    msnry.layout()
+    msnry?.layout()
   })
 }
 
-async function copyImageUrl(url: string, event: MouseEvent) {
+function onResize() {
+  if (msnry) {
+    msnry.destroy()
+    msnry = null
+  }
+  initMasonry()
+}
+
+async function copyImageUrl(url: string, index: number, event: MouseEvent) {
   event.preventDefault()
   event.stopPropagation()
   const ok = await copy(url)
-  if (ok) toast.show('Image URL copied!')
+  if (ok) {
+    toast.show('Image URL copied!')
+    copiedIndex.value = index
+    setTimeout(() => { copiedIndex.value = null }, 1500)
+  }
+}
+
+function onImageLoad(index: number) {
+  loadedImages.value.add(index)
 }
 
 onMounted(() => {
   initMasonry()
+  window.addEventListener('resize', onResize)
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
   if (msnry) {
     msnry.destroy()
     msnry = null
@@ -59,7 +104,7 @@ watch(() => props.images, () => {
     msnry.destroy()
     msnry = null
   }
-  setTimeout(initMasonry, 0)
+  nextTick(initMasonry)
 })
 </script>
 
@@ -73,12 +118,12 @@ watch(() => props.images, () => {
     aria-label="Gallery images"
   >
     <div class="grid-sizer" aria-hidden="true"></div>
-    <div class="gutter-sizer" aria-hidden="true"></div>
 
     <figure
       v-for="(image, index) in images"
       :key="image.url"
       class="grid-item"
+      :style="{ '--item-index': index }"
       itemprop="image"
       itemscope
       itemtype="http://schema.org/ImageObject"
@@ -94,19 +139,19 @@ watch(() => props.images, () => {
       >
         <img
           :src="image.url"
+          :srcset="`${image.url}?size=400 400w, ${image.url}?size=800 800w, ${image.url} 1200w`"
+          sizes="(min-width: 1100px) 33vw, (min-width: 500px) 50vw, 100vw"
           :alt="`Gallery image ${index + 1}`"
           class="grid-item__img"
+          :class="{ 'is-loaded': loadedImages.has(index) }"
           loading="lazy"
           itemprop="url"
+          @load="onImageLoad(index)"
         />
         <!-- Hover overlay -->
         <div class="grid-item__overlay" aria-hidden="true">
           <!-- Zoom icon -->
-          <svg class="overlay-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M8 11H14M11 8V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+          <ZoomIn :size="24" aria-hidden="true" class="overlay-icon" />
         </div>
       </a>
 
@@ -114,48 +159,60 @@ watch(() => props.images, () => {
       <button
         type="button"
         class="grid-item__share"
+        :class="{ 'is-copied': copiedIndex === index }"
         :aria-label="`Copy URL of image ${index + 1}`"
-        @click="copyImageUrl(image.url, $event)"
+        @click="copyImageUrl(image.url, index, $event)"
       >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <circle cx="11" cy="2.5" r="1.5" stroke="currentColor" stroke-width="1.2"/>
-          <circle cx="11" cy="11.5" r="1.5" stroke="currentColor" stroke-width="1.2"/>
-          <circle cx="2.5" cy="7" r="1.5" stroke="currentColor" stroke-width="1.2"/>
-          <path d="M4 7.3L9.5 10.3M9.5 3.7L4 6.7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
+        <Check v-if="copiedIndex === index" :size="14" aria-hidden="true" />
+        <Share2 v-else :size="14" aria-hidden="true" />
       </button>
     </figure>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.grid-gallery {
-  position: relative;
+// Gutter must match the JS GUTTER constant
+$gutter: 10px;
+
+// ── Keyframes ────────────────────────────────────────────────────────────────
+
+// Staggered image entrance
+@keyframes image-reveal {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+// Share button confirmed pulse
+@keyframes share-pulse {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(0) scale(1.15); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.grid-gallery {
+  position: relative;
+  margin: 0 auto;
+}
+
+// ── Sizer and item widths ─────────────────────────────────────────────────────
+// Single column (mobile): full width, no fitWidth
 .grid-sizer,
 .grid-item {
   width: 100%;
 
+  // 2 columns at 500px+
   @media (min-width: 500px) {
-    width: calc(50% - 3px);
+    width: 240px;
   }
 
+  // 3 columns at 1100px+
   @media (min-width: 1100px) {
-    width: calc(33.333% - 4px);
-  }
-}
-
-.gutter-sizer {
-  width: 5px;
-
-  @media (min-width: 500px) {
-    width: 5px;
+    width: 340px;
   }
 }
 
 .grid-item {
-  margin-bottom: 5px;
+  margin-bottom: $gutter;
   position: relative;
   overflow: hidden;
   display: block;
@@ -169,6 +226,8 @@ watch(() => props.images, () => {
   position: relative;
   overflow: hidden;
   line-height: 0; // Remove inline gap under image
+  // 3D depth context for hover effect
+  perspective: 800px;
 
   &:focus-visible {
     outline: 2px solid var(--color-primary);
@@ -180,7 +239,15 @@ watch(() => props.images, () => {
   display: block;
   width: 100%;
   height: auto;
-  transition: transform var(--duration-normal) var(--ease-out-quart);
+  opacity: 0;
+  transition: transform var(--duration-normal) var(--ease-out-quart),
+              filter var(--duration-normal) var(--ease-out-quart);
+
+  // Staggered entrance: fade + scale up when image loads
+  &.is-loaded {
+    --stagger: calc(var(--item-index, 0) * 60ms);
+    animation: image-reveal var(--duration-entrance) var(--ease-out-quart) var(--stagger) both;
+  }
 }
 
 .grid-item__overlay {
@@ -195,14 +262,15 @@ watch(() => props.images, () => {
 }
 
 .overlay-icon {
-  color: oklch(98% 0 0);
-  filter: drop-shadow(0 2px 4px oklch(0% 0 0 / 0.3));
+  color: var(--color-on-primary);
+  filter: drop-shadow(0 2px 4px oklch(from var(--color-shadow) l c h / 0.3));
 }
 
-// Hover interactions on the link
+// Hover interactions on the link — subtle 3D depth lift
 .grid-item__link:hover {
   .grid-item__img {
-    transform: scale(1.03);
+    transform: scale(1.02) translateZ(10px);
+    filter: brightness(1.02);
   }
 
   .grid-item__overlay {
@@ -215,8 +283,8 @@ watch(() => props.images, () => {
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   background-color: oklch(from var(--color-surface-raised) l c h / 0.9);
   border: 1px solid var(--color-border);
@@ -246,10 +314,25 @@ watch(() => props.images, () => {
   }
 }
 
+// Copied state — accent color + satisfying scale pulse
+.grid-item__share.is-copied {
+  color: var(--color-accent);
+  opacity: 1;
+  animation: share-pulse 300ms var(--ease-out-quart);
+}
+
 // Show share button on figure hover
 .grid-item:hover .grid-item__share {
   opacity: 1;
   transform: translateY(0);
+}
+
+// Always show share button on touch devices (no hover capability)
+@media (hover: none) {
+  .grid-item__share {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -257,6 +340,16 @@ watch(() => props.images, () => {
   .grid-item__overlay,
   .grid-item__share {
     transition: none;
+    animation: none;
+  }
+
+  .grid-item__img {
+    opacity: 1;
+  }
+
+  .grid-item__share.is-copied {
+    animation: none;
+    transform: translateY(0);
   }
 }
 </style>

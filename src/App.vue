@@ -38,8 +38,9 @@ async function onUploadFiles(files: File[]) {
 </script>
 
 <template>
+  <a href="#main" class="sr-only sr-only-focusable">Skip to content</a>
   <AppHeader />
-  <main>
+  <main id="main">
     <router-view v-slot="{ Component }">
       <Transition name="page" mode="out-in">
         <component :is="Component" />
@@ -84,12 +85,12 @@ main {
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(12px) scale(0.99);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-8px) scale(0.99);
 }
 
 // Overlay transition

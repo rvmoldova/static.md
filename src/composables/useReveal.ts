@@ -6,7 +6,6 @@ interface RevealOptions {
   rootMargin?: string
   animationClass?: string
   stagger?: boolean
-  staggerDelay?: number
 }
 
 export function useReveal(containerRef?: Ref<HTMLElement | null>, options: RevealOptions = {}) {
@@ -16,13 +15,22 @@ export function useReveal(containerRef?: Ref<HTMLElement | null>, options: Revea
     rootMargin = '0px 0px -50px 0px',
     animationClass = 'animate-fade-in-up',
     stagger = true,
-    staggerDelay = 80,
   } = options;
 
   let observer: IntersectionObserver | null = null;
 
   onMounted(() => {
     const container = containerRef?.value || document;
+
+    // If user prefers reduced motion, show all content immediately
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      const elements = container.querySelectorAll(selector);
+      elements.forEach((el: Element) => {
+        el.classList.add(animationClass);
+      });
+      return;
+    }
 
     observer = new IntersectionObserver(
       (entries) => {

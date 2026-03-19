@@ -23,11 +23,6 @@ const routes = [
     component: () => import('../views/PrivacyView.vue'),
   },
   {
-    path: '/developer',
-    name: 'developer',
-    component: () => import('../views/DeveloperView.vue'),
-  },
-  {
     path: '/404',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),

@@ -67,6 +67,10 @@
   // Warm accent: terracotta
   --color-accent-warm:  oklch(62% 0.16 25);
 
+  // Light text intended for use on top of primary/brand-colored backgrounds.
+  // Always light regardless of theme.
+  --color-on-primary:   oklch(98% 0.005 250);
+
   // ── Z-index scale ───────────────────────────────────────────────────────────
   --z-dropdown: 100;
   --z-sticky:   200;

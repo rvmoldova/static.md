@@ -37,6 +37,7 @@ useReveal(pageRef, { selector: '.reveal', animationClass: 'animate-fade-in-up', 
   margin-inline: auto;
   padding-inline: var(--content-padding);
   margin-top: var(--space-16);
+  padding-bottom: var(--space-24);
 }
 
 .terminal-block {

@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { X, CloudUpload, AlertCircle } from 'lucide-vue-next'
+import { useFocusTrap } from '../composables/useFocusTrap'
+
+const modalRef = ref<HTMLElement | null>(null)
+useFocusTrap(modalRef)
 
 const props = defineProps({
   isUploading: {
@@ -73,6 +78,7 @@ function handleKeydown(e: KeyboardEvent) {
 <template>
   <!-- Backdrop -->
   <div
+    ref="modalRef"
     class="modal-wrapper"
     role="dialog"
     aria-modal="true"
@@ -90,11 +96,7 @@ function handleKeydown(e: KeyboardEvent) {
           aria-label="Close upload modal"
           @click="emit('close')"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <X :size="16" aria-hidden="true" />
         </button>
       </div>
 
@@ -107,20 +109,14 @@ function handleKeydown(e: KeyboardEvent) {
             <span class="modal__progress-pct">{{ progress }}%</span>
           </div>
           <div class="modal__progress-track" role="progressbar" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-            <div class="modal__progress-fill" :style="{ width: progress + '%' }" />
+            <div class="modal__progress-fill" :class="{ 'modal__progress-fill--complete': progress >= 100 }" :style="{ width: progress + '%' }" />
           </div>
           <p class="modal__progress-hint">Please wait…</p>
         </div>
 
         <!-- State: Error -->
         <div v-else-if="error" class="modal__error">
-          <svg class="modal__error-icon" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-               stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
-          </svg>
+          <AlertCircle :size="40" aria-hidden="true" class="modal__error-icon" />
           <p class="modal__error-message">{{ error }}</p>
           <button type="button" class="modal__retry-btn" @click="openFilePicker">
             Try again
@@ -141,15 +137,7 @@ function handleKeydown(e: KeyboardEvent) {
           @dragleave="handleDropZoneDragLeave"
           @drop="handleDropZoneDrop"
         >
-          <!-- Cloud upload icon -->
-          <svg
-            class="modal__dropzone-icon"
-            viewBox="0 0 505.736 505.736"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M396.007,191.19c-0.478,0-1.075,0-1.554,0c-6.693-54.147-52.833-96.103-108.773-96.103c-48.171,0-89.051,31.078-103.753,74.349c-16.734-8.128-35.381-12.67-55.224-12.67C56.658,156.765,0,213.542,0,283.707c0,67.416,52.594,122.64,118.934,126.703v0.239h277.91c60.244-0.358,108.893-49.366,108.893-109.729C505.617,240.317,456.609,191.19,396.007,191.19z"/>
-          </svg>
+          <CloudUpload :size="48" aria-hidden="true" class="modal__dropzone-icon" />
           <p class="modal__dropzone-primary">Select files or drop them here</p>
           <p class="modal__dropzone-hint">Or press <kbd>Ctrl+V</kbd> to paste from clipboard</p>
         </div>
@@ -368,8 +356,39 @@ function handleKeydown(e: KeyboardEvent) {
   height: 100%;
   background-color: var(--color-primary);
   border-radius: var(--radius-full);
-  transition: width var(--duration-fast) var(--ease-out-quart);
+  transition: width var(--duration-fast) var(--ease-out-quart),
+              background-color var(--duration-normal) var(--ease-out-quart),
+              transform var(--duration-fast) var(--ease-out-quart);
   min-width: 2px;
+  position: relative;
+  overflow: hidden;
+
+  // Shimmer highlight sliding across the bar
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, oklch(100% 0 0 / 0.25), transparent);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+// Upload complete: flash accent color + slight scale
+.modal__progress-fill--complete {
+  background-color: var(--color-accent);
+  transform: scaleY(1.3);
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+              transform var(--duration-fast) var(--ease-out-quart);
+
+  &::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .modal__progress-hint {
@@ -503,6 +522,14 @@ function handleKeydown(e: KeyboardEvent) {
 
 @media (prefers-reduced-motion: reduce) {
   .modal__progress-fill {
+    transition: none;
+
+    &::after {
+      animation: none;
+    }
+  }
+
+  .modal__progress-fill--complete {
     transition: none;
   }
 }
