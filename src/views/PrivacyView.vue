@@ -19,10 +19,12 @@ useReveal(pageRef, { selector: '.reveal', animationClass: 'animate-fade-in-up', 
 
       <h2>2. Acceptable Use</h2>
       <p>You may use STATIC.MD to upload and share images for personal, non-commercial purposes. You agree not to:</p>
-      <p>- Upload illegal content, including but not limited to child exploitation material, content that violates applicable laws, or content that infringes on the rights of others.</p>
-      <p>- Use the service to distribute malware, spam, or phishing content.</p>
-      <p>- Abuse, exploit, or overload the service in a way that degrades it for other users.</p>
-      <p>- Use the service as a CDN or for bulk automated uploads without prior permission.</p>
+      <ul>
+        <li>Upload illegal content, including but not limited to child exploitation material, content that violates applicable laws, or content that infringes on the rights of others.</li>
+        <li>Use the service to distribute malware, spam, or phishing content.</li>
+        <li>Abuse, exploit, or overload the service in a way that degrades it for other users.</li>
+        <li>Use the service as a CDN or for bulk automated uploads without prior permission.</li>
+      </ul>
 
       <h2>3. Your Content</h2>
       <p>You retain ownership of the images you upload. By uploading content, you represent that you have the right to do so and that it does not infringe on anyone else's rights.</p>
@@ -67,10 +69,12 @@ useReveal(pageRef, { selector: '.reveal', animationClass: 'animate-fade-in-up', 
 
       <h2>How We Use Your Data</h2>
       <p>We use collected data for the following purposes:</p>
-      <p>- To provide the image hosting service (storing and serving your uploads).</p>
-      <p>- To detect and prevent misuse, abuse, or exploitation of the service.</p>
-      <p>- To block access from IP addresses associated with violations.</p>
-      <p>- To understand general usage patterns and improve the service.</p>
+      <ul>
+        <li>To provide the image hosting service (storing and serving your uploads).</li>
+        <li>To detect and prevent misuse, abuse, or exploitation of the service.</li>
+        <li>To block access from IP addresses associated with violations.</li>
+        <li>To understand general usage patterns and improve the service.</li>
+      </ul>
 
       <h2>Fair Use and Content Moderation</h2>
       <p>STATIC.MD assumes fair, personal use of the service. We reserve the right to delete any uploaded content at any time and without prior notice, particularly in cases of copyright infringement, illegal content, or abuse of the service. We may also block IP addresses associated with such violations.</p>

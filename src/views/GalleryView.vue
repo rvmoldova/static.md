@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
+import { Link2 } from 'lucide-vue-next'
 import { useGallery } from '../composables/useGallery'
 import GalleryGrid from '../components/GalleryGrid.vue'
 import EmbedModal from '../components/EmbedModal.vue'
@@ -75,11 +76,7 @@ watch(error, (err) => {
           aria-haspopup="dialog"
           @click="showEmbedModal = true"
         >
-          <!-- Link icon -->
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M6.5 9.5a3.536 3.536 0 005 0l2-2a3.536 3.536 0 00-5-5L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M9.5 6.5a3.536 3.536 0 00-5 0l-2 2a3.536 3.536 0 005 5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+          <Link2 :size="14" aria-hidden="true" />
           <span>Embed this gallery</span>
         </button>
       </template>
@@ -125,68 +122,40 @@ watch(error, (err) => {
 .gallery-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-block: var(--space-8);
-  min-height: 64px;
+  justify-content: flex-end;
+  padding-block: var(--space-6);
+  min-height: var(--space-12);
 }
 
-// Embed button — outlined with hover fill
+// Embed button — subtle secondary action
 .embed-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text);
+  color: var(--color-text-tertiary);
   background-color: transparent;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: color var(--duration-normal) var(--ease-out-quart),
-              border-color var(--duration-normal) var(--ease-out-quart);
-
-  // Fill animation on hover via pseudo-element
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: var(--color-primary);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--duration-normal) var(--ease-out-quart);
-    z-index: 0;
-  }
-
-  svg,
-  span {
-    position: relative;
-    z-index: 1;
-  }
+  transition: color var(--duration-fast) var(--ease-out-quart),
+              border-color var(--duration-fast) var(--ease-out-quart),
+              background-color var(--duration-fast) var(--ease-out-quart);
 
   &:hover {
-    color: oklch(98% 0.005 250);
-    border-color: var(--color-primary);
-
-    &::before {
-      transform: scaleX(1);
-    }
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface-sunken);
   }
 
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::before {
-      transition: none;
-    }
   }
 }
 
@@ -207,7 +176,7 @@ watch(error, (err) => {
 .skeleton-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 5px;
+  gap: var(--space-3);
 
   @media (min-width: 500px) {
     grid-template-columns: repeat(2, 1fr);

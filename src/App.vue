@@ -38,8 +38,9 @@ async function onUploadFiles(files: File[]) {
 </script>
 
 <template>
+  <a href="#main" class="sr-only sr-only-focusable">Skip to content</a>
   <AppHeader />
-  <main>
+  <main id="main">
     <router-view v-slot="{ Component }">
       <Transition name="page" mode="out-in">
         <component :is="Component" />

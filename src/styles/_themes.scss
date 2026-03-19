@@ -15,7 +15,7 @@
   // Text — warm-neutral, never pure black
   --color-text:           oklch(18% 0.01 250);
   --color-text-secondary: oklch(40% 0.01 250);
-  --color-text-tertiary:  oklch(55% 0.008 250);
+  --color-text-tertiary:  oklch(45% 0.008 250);
 
   // Borders
   --color-border:        oklch(88% 0.008 250);
@@ -24,6 +24,9 @@
   // Primary tinted surface + text
   --color-primary-surface: oklch(94% 0.03 230);
   --color-primary-text:    oklch(40% 0.12 230);
+
+  // Shadow base color — opaque; apply alpha at each usage site
+  --color-shadow: oklch(15% 0.01 250);
 
   // Shadows — subtle depth, not flat
   --shadow-sm: 0 1px 2px oklch(20% 0.01 250 / 0.06);
@@ -51,7 +54,7 @@
   // Text — slightly warm, softened
   --color-text:           oklch(90% 0.005 250);
   --color-text-secondary: oklch(70% 0.008 250);
-  --color-text-tertiary:  oklch(50% 0.006 250);
+  --color-text-tertiary:  oklch(58% 0.006 250);
 
   // Borders — visible but not harsh
   --color-border:        oklch(30% 0.012 250);
@@ -60,6 +63,9 @@
   // Primary — desaturated slightly for dark context
   --color-primary-surface: oklch(25% 0.04 230);
   --color-primary-text:    oklch(75% 0.10 230);
+
+  // Shadow base color — opaque; apply alpha at each usage site
+  --color-shadow: oklch(0% 0 0);
 
   // No box shadows in dark mode — use surface lightness for depth
   --shadow-sm: none;
@@ -91,13 +97,16 @@
 
     --color-text:           oklch(90% 0.005 250);
     --color-text-secondary: oklch(70% 0.008 250);
-    --color-text-tertiary:  oklch(50% 0.006 250);
+    --color-text-tertiary:  oklch(58% 0.006 250);
 
     --color-border:        oklch(30% 0.012 250);
     --color-border-strong: oklch(40% 0.015 250);
 
     --color-primary-surface: oklch(25% 0.04 230);
     --color-primary-text:    oklch(75% 0.10 230);
+
+    // Shadow base color — opaque; apply alpha at each usage site
+    --color-shadow: oklch(0% 0 0);
 
     --shadow-sm: none;
     --shadow-md: none;

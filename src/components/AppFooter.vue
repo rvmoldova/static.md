@@ -20,7 +20,6 @@ const currentYear = new Date().getFullYear()
 
       <!-- Nav links -->
       <nav class="app-footer__nav" aria-label="Footer navigation">
-        <router-link to="/contact" class="app-footer__nav-link app-footer__nav-link--mobile-only">Contact</router-link>
         <router-link to="/privacy" class="app-footer__nav-link">Terms &amp; Privacy</router-link>
       </nav>
     </div>
@@ -121,10 +120,6 @@ const currentYear = new Date().getFullYear()
     color: var(--color-text-secondary);
   }
 
-  // Contact link — only visible on mobile (hidden in header there)
-  &--mobile-only {
-    display: none;
-  }
 }
 
 @media (max-width: 640px) {
@@ -133,10 +128,6 @@ const currentYear = new Date().getFullYear()
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-4) var(--content-padding);
-  }
-
-  .app-footer__nav-link--mobile-only {
-    display: inline-flex;
   }
 }
 </style>

@@ -1,4 +1,4 @@
-const API_BASE = '/api/v4';
+const API_BASE = 'https://static.md/api/v4';
 
 export interface GalleryImage {
   url: string

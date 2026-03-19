@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { X, Copy, Check } from 'lucide-vue-next'
 import { useClipboard } from '../composables/useClipboard'
 import { useToast } from '../composables/useToast'
+import { useFocusTrap } from '../composables/useFocusTrap'
+
+const modalRef = ref<HTMLElement | null>(null)
+useFocusTrap(modalRef)
 
 const props = defineProps({
   galleryId: {
@@ -18,6 +23,8 @@ const emit = defineEmits(['close'])
 
 const { copy } = useClipboard()
 const toast = useToast()
+const linkCopied = ref(false)
+const codeCopied = ref(false)
 
 const activeTab = ref('html')
 const tabs = [
@@ -54,12 +61,20 @@ const activeCode = computed(() => {
 
 async function copyLink() {
   const ok = await copy(embedCodes.value.galleryLink)
-  if (ok) toast.show('Gallery link copied!')
+  if (ok) {
+    toast.show('Gallery link copied!')
+    linkCopied.value = true
+    setTimeout(() => { linkCopied.value = false }, 1500)
+  }
 }
 
 async function copyCode() {
   const ok = await copy(activeCode.value)
-  if (ok) toast.show('Embed code copied!')
+  if (ok) {
+    toast.show('Embed code copied!')
+    codeCopied.value = true
+    setTimeout(() => { codeCopied.value = false }, 1500)
+  }
 }
 
 function onBackdropClick(e: MouseEvent) {
@@ -69,10 +84,36 @@ function onBackdropClick(e: MouseEvent) {
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') emit('close')
 }
+
+function onTabKeydown(e: KeyboardEvent) {
+  const currentIndex = tabs.findIndex(t => t.id === activeTab.value)
+  let nextIndex = -1
+
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault()
+    nextIndex = (currentIndex + 1) % tabs.length
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault()
+    nextIndex = (currentIndex - 1 + tabs.length) % tabs.length
+  } else if (e.key === 'Home') {
+    e.preventDefault()
+    nextIndex = 0
+  } else if (e.key === 'End') {
+    e.preventDefault()
+    nextIndex = tabs.length - 1
+  }
+
+  if (nextIndex >= 0) {
+    activeTab.value = tabs[nextIndex].id
+    const tabEl = document.getElementById(`tab-${tabs[nextIndex].id}`)
+    tabEl?.focus()
+  }
+}
 </script>
 
 <template>
   <div
+    ref="modalRef"
     class="modal-backdrop"
     role="dialog"
     aria-modal="true"
@@ -89,10 +130,7 @@ function onKeydown(e: KeyboardEvent) {
           aria-label="Close embed modal"
           @click="emit('close')"
         >
-          <!-- X icon -->
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+          <X :size="16" aria-hidden="true" />
         </button>
       </header>
 
@@ -100,7 +138,7 @@ function onKeydown(e: KeyboardEvent) {
         <!-- Gallery link -->
         <div class="field">
           <p class="field-label">Gallery link</p>
-          <div class="input-row">
+          <div class="input-wrap">
             <input
               type="text"
               class="code-input"
@@ -109,12 +147,15 @@ function onKeydown(e: KeyboardEvent) {
               aria-label="Gallery link URL"
               @click="copyLink"
             />
-            <button type="button" class="copy-btn" aria-label="Copy gallery link" @click="copyLink">
-              <!-- Clipboard icon -->
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="5" y="2" width="8" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 4H2a1 1 0 00-1 1v9a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
+            <button
+              type="button"
+              class="inline-copy-btn"
+              :class="{ 'is-copied': linkCopied }"
+              aria-label="Copy gallery link"
+              @click="copyLink"
+            >
+              <Check v-if="linkCopied" :size="14" aria-hidden="true" />
+              <Copy v-else :size="14" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -127,16 +168,25 @@ function onKeydown(e: KeyboardEvent) {
               <button
                 v-for="tab in tabs"
                 :key="tab.id"
+                :id="`tab-${tab.id}`"
                 type="button"
                 role="tab"
                 class="tab-btn"
                 :class="{ 'tab-btn--active': activeTab === tab.id }"
                 :aria-selected="activeTab === tab.id"
+                :aria-controls="`tabpanel-${tab.id}`"
+                :tabindex="activeTab === tab.id ? 0 : -1"
                 @click="activeTab = tab.id"
+                @keydown="onTabKeydown"
               >{{ tab.label }}</button>
             </div>
           </div>
-          <div class="input-row">
+          <div
+            :id="`tabpanel-${activeTab}`"
+            role="tabpanel"
+            :aria-labelledby="`tab-${activeTab}`"
+            class="textarea-wrap"
+          >
             <textarea
               class="code-textarea"
               :value="activeCode"
@@ -145,25 +195,19 @@ function onKeydown(e: KeyboardEvent) {
               aria-label="Embed code"
               @click="copyCode"
             />
-            <button type="button" class="copy-btn copy-btn--top" aria-label="Copy embed code" @click="copyCode">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="5" y="2" width="8" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 4H2a1 1 0 00-1 1v9a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
+            <button
+              type="button"
+              class="textarea-copy-btn"
+              :class="{ 'is-copied': codeCopied }"
+              aria-label="Copy embed code"
+              @click="copyCode"
+            >
+              <Check v-if="codeCopied" :size="14" aria-hidden="true" />
+              <Copy v-else :size="14" aria-hidden="true" />
             </button>
           </div>
         </div>
       </div>
-
-      <footer class="modal-footer">
-        <button type="button" class="footer-close-btn" @click="emit('close')">
-          <!-- X icon inline -->
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <span>close</span>
-        </button>
-      </footer>
     </div>
   </div>
 </template>
@@ -173,6 +217,7 @@ function onKeydown(e: KeyboardEvent) {
   position: fixed;
   inset: 0;
   background-color: var(--color-overlay);
+  backdrop-filter: blur(2px);
   z-index: var(--z-modal);
   display: flex;
   align-items: center;
@@ -185,7 +230,7 @@ function onKeydown(e: KeyboardEvent) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
@@ -201,15 +246,15 @@ function onKeydown(e: KeyboardEvent) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--color-border);
 }
 
 .modal-title {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-normal);
+  letter-spacing: 0.06em;
   color: var(--color-text);
 }
 
@@ -217,8 +262,8 @@ function onKeydown(e: KeyboardEvent) {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: var(--radius-sm);
   color: var(--color-text-tertiary);
   background: transparent;
@@ -239,10 +284,10 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 .modal-body {
-  padding: var(--space-6);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .field {
@@ -255,7 +300,7 @@ function onKeydown(e: KeyboardEvent) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .field-label {
@@ -266,9 +311,13 @@ function onKeydown(e: KeyboardEvent) {
   color: var(--color-text-tertiary);
 }
 
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 .tabs {
   display: flex;
-  gap: var(--space-1);
+  gap: 1px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
 .tab-btn {
@@ -278,18 +327,83 @@ function onKeydown(e: KeyboardEvent) {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text-secondary);
+  min-height: 28px;
+  border: none;
+  background: var(--color-surface-raised);
+  color: var(--color-text-tertiary);
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-out-quart),
-              background-color var(--duration-fast) var(--ease-out-quart),
-              border-color var(--duration-fast) var(--ease-out-quart);
+              background-color var(--duration-fast) var(--ease-out-quart);
 
   &:hover {
     color: var(--color-text);
+    background-color: var(--color-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+  }
+
+  &--active {
+    color: var(--color-primary-text);
+    background-color: var(--color-primary-surface);
+  }
+}
+
+// ── Gallery link input with inline copy button ────────────────────────────────
+.input-wrap {
+  position: relative;
+}
+
+.code-input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-8) var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
     border-color: var(--color-border-strong);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+  }
+}
+
+.inline-copy-btn {
+  position: absolute;
+  right: var(--space-1);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out-quart),
+              background-color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-raised);
   }
 
   &:focus-visible {
@@ -297,40 +411,18 @@ function onKeydown(e: KeyboardEvent) {
     outline-offset: 2px;
   }
 
-  &--active {
-    color: var(--color-primary-text);
-    background-color: var(--color-primary-surface);
-    border-color: var(--color-primary-surface);
+  &.is-copied {
+    color: var(--color-accent);
   }
 }
 
-.input-row {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-start;
-}
-
-.code-input {
-  flex: 1;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  background-color: var(--color-surface-sunken);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  transition: border-color var(--duration-fast) var(--ease-out-quart);
-
-  &:hover,
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
+// ── Textarea with corner copy button ──────────────────────────────────────────
+.textarea-wrap {
+  position: relative;
 }
 
 .code-textarea {
-  flex: 1;
+  width: 100%;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
@@ -338,84 +430,79 @@ function onKeydown(e: KeyboardEvent) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: var(--space-3);
+  padding-top: var(--space-2);
   resize: none;
   cursor: pointer;
   line-height: var(--leading-normal);
   transition: border-color var(--duration-fast) var(--ease-out-quart);
 
-  &:hover,
-  &:focus {
+  &:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  &:focus:not(:focus-visible) {
     outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
     border-color: var(--color-primary);
   }
 }
 
-.copy-btn {
-  flex-shrink: 0;
+.textarea-copy-btn {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+  border: none;
   background-color: var(--color-surface-sunken);
   color: var(--color-text-tertiary);
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-out-quart),
-              background-color var(--duration-fast) var(--ease-out-quart),
-              border-color var(--duration-fast) var(--ease-out-quart);
-
-  &:hover {
-    color: var(--color-text);
-    background-color: var(--color-surface-raised);
-    border-color: var(--color-border-strong);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-
-  &--top {
-    align-self: flex-start;
-  }
-}
-
-.modal-footer {
-  padding: var(--space-4) var(--space-6);
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: flex-end;
-}
-
-.footer-close-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-4);
-  cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out-quart),
-              border-color var(--duration-fast) var(--ease-out-quart),
               background-color var(--duration-fast) var(--ease-out-quart);
 
   &:hover {
     color: var(--color-text);
-    border-color: var(--color-border-strong);
-    background-color: var(--color-surface-sunken);
+    background-color: var(--color-surface-raised);
   }
 
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+  }
+
+  &.is-copied {
+    color: var(--color-accent);
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 480px) {
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-container {
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-container {
+    animation: none;
   }
 }
 </style>

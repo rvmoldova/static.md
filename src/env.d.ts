@@ -8,7 +8,3 @@ declare module '*.vue' {
 
 declare module 'masonry-layout';
 declare module 'imagesloaded';
-
-interface Window {
-  ga?: (...args: any[]) => void;
-}
